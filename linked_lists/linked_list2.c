@@ -100,6 +100,32 @@ delete_in_middle(Node **head) {
 	free(behind_p);
 }
 
+Node
+*reverse_linked_list(Node **head) {
+	Node *previous_p = NULL;
+	Node *current_p = (*head);
+	Node *ahead_p = (*head)->next;
+
+	if (*head != NULL) {
+		while(current_p != NULL) {
+			// Preserve next node
+			ahead_p = current_p->next;
+
+			// Point to previous node
+			current_p->next = previous_p;
+
+			// Set previous node to current node
+			previous_p = current_p;
+
+			// Set next node to current
+			current_p = ahead_p;
+		}
+	}
+
+	// Will ultimately be the final node
+	return previous_p;
+}
+
 void 
 *print_linked_list(Node *head) {
 	Node *tmp = head;
@@ -167,6 +193,10 @@ int main(int argc, char *argv[]) {
 
 	delete_in_middle(&head);
 	print_middle(head);
+	print_linked_list(head);
+
+	printf("Reverse the linked list\n");
+	head = reverse_linked_list(&head);
 	print_linked_list(head);
 
 	return 0;
