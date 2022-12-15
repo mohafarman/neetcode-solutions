@@ -126,6 +126,53 @@ Node
 	return previous_p;
 }
 
+Node
+*merge_sorted_linked_lists(Node **list1, Node **list2) {
+	/* Return one sorted link list */
+	
+	// New head
+	Node *head = NULL;
+
+	// Head points to list based on which one contains
+	// lowest value, because it needs to be returned sorted
+	if ((*list1)->data <= (*list2)->data) {
+		head = (*list1);
+		(*list1) = (*list1)->next;
+	}
+	else {
+		head = (*list2);
+		(*list2) = (*list2)->next;
+	}
+
+	Node *current_p = head;
+
+	while (*list1 != NULL && *list2 != NULL) {
+		// Point current node to the lowest value in one of
+		// the linked lists
+		if ((*list1)->data <= (*list2)->data) {
+			current_p->next = (*list1);
+			(*list1) = (*list1)->next;
+		} 
+		else {
+			current_p->next = (*list2);
+			(*list2) = (*list2)->next;
+		}
+		current_p = current_p->next;
+	}
+
+	// One of the linked lists might be finish first
+	// Figure out which one it is and simply point to it
+	// to finish off the linked list
+	if ((*list1) == NULL) {
+		current_p->next = (*list2);
+	} 
+	else {
+		current_p->next = (*list1);
+	}
+	
+	return head;
+}
+
 void 
 *print_linked_list(Node *head) {
 	Node *tmp = head;
@@ -166,6 +213,7 @@ print_middle(Node *head) {
 int main(int argc, char *argv[]) {
 
 	Node *head = NULL;
+	Node *head2 = NULL;
 
 	for (int i = 0; i < 11; i++) {
 		add_node_to_front(&head, i);
@@ -198,6 +246,21 @@ int main(int argc, char *argv[]) {
 	printf("Reverse the linked list\n");
 	head = reverse_linked_list(&head);
 	print_linked_list(head);
+
+	printf("Create another linked list\n");
+	head2 = create_new_node(1);
+	for (int i = 0; i < 11; i++) {
+		i++;
+		add_node_to_end(&head2, i);
+	}
+
+	printf("Merge the two following linked lists sorted:\n");
+	print_linked_list(head);
+	print_linked_list(head2);
+
+	Node *merged_linked_list = merge_sorted_linked_lists(&head, &head2);
+	printf("Print sorted merged linked list\n");
+	print_linked_list(merged_linked_list);
 
 	return 0;
 }
