@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct Node {
 	int data;
@@ -241,6 +242,29 @@ print_middle(Node *head) {
 	printf("Middle node is %d\n", behind_p->data);
 }
 
+bool
+is_circular_linked_list(Node *head) {
+	Node *tmp = head->next;
+	
+	// Store traversed nodes
+	int prev[32];
+	int counter = 0;
+
+	while (tmp != NULL) {
+		prev[counter++] = tmp->data;
+
+		for (int i = 0; i < counter; i++) {
+			// Check if the next node has been seen previously
+			if (tmp->next->data == prev[i]) {
+				return true;
+			}
+		}
+		tmp = tmp->next;
+	}
+
+	return false;
+}
+
 int main(int argc, char *argv[]) {
 
 	Node *head = NULL;
@@ -299,6 +323,21 @@ int main(int argc, char *argv[]) {
 	Node *circular_linked_list = create_circular_linked_list(N);
 	printf("Print the circular linked list\n");
 	print_circular_linked_list(circular_linked_list);
+
+	printf("Create a temporary linked list\n");
+	Node *temp = create_new_node(1);
+	for (int i = 0; i < 11; i++) {
+		i++;
+		add_node_to_end(&head2, i);
+	}
+
+	printf("Checking if list ic circular linked list or not.\nAssuming node values are different\n");
+	bool x = is_circular_linked_list(circular_linked_list);
+	fputs(x ? "circular_linked_list : true" : "circular_linked_list : false", stdout);
+	printf("\n");
+	x = is_circular_linked_list(temp);
+	fputs(x ? "temp : true" : "temp : false", stdout);
+	printf("\n");
 
 	return 0;
 }
