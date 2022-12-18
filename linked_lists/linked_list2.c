@@ -14,6 +14,25 @@ Node
 	return new_node;
 }
 
+Node
+*create_circular_linked_list(N) {
+	Node *head = (Node *)malloc(sizeof *head), *first_node = NULL;
+	head->data = 1;
+	first_node = head;
+
+	for (int i = 2; i < N; i++) {
+		head->next = (Node *)malloc(sizeof *head);
+		head = head->next;
+		head->data = i;
+		printf("head->data: %d\n", head->data);
+	}
+
+	// Point the last node to the first, complete the list
+	head->next = first_node;
+	//head = first_node;
+	return head;
+}
+
 void 
 *add_node_to_front(Node **head, int data) {
 	Node *new_node = (Node *)malloc(sizeof (Node));
@@ -183,6 +202,18 @@ void
 	printf("\n");
 }
 
+void 
+*print_circular_linked_list(Node *head) {
+	Node *tmp = head->next;
+	Node *first_node = head;
+	while (tmp != head) {
+		printf("%d - ", tmp->data);
+		tmp = tmp->next;
+	}
+	printf("%d - ", first_node->data);
+	printf("\n");
+}
+
 Node
 *find_node(Node *head, int data) {
 	Node *tmp = head;
@@ -261,6 +292,13 @@ int main(int argc, char *argv[]) {
 	Node *merged_linked_list = merge_sorted_linked_lists(&head, &head2);
 	printf("Print sorted merged linked list\n");
 	print_linked_list(merged_linked_list);
+
+	// Number of nodes
+	int N = 11;
+	printf("Create a circular linked list\n");
+	Node *circular_linked_list = create_circular_linked_list(N);
+	printf("Print the circular linked list\n");
+	print_circular_linked_list(circular_linked_list);
 
 	return 0;
 }
